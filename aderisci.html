@@ -5,26 +5,108 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Contact Us - Brand</title>
-    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css?h=ee0ef312f3d017dd77f4c1ebe512ed7e">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css?h=d47a18287833af57c7d1f8031aaf85c2">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Aleo">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css">
-    <link rel="stylesheet" href="/assets/css/smoothproducts.css?h=38a515b6b30123300b3619cce6411cec">
+    <link rel="stylesheet" href="assets/css/smoothproducts.css?h=38a515b6b30123300b3619cce6411cec">
 </head>
 
-<body>
+<body><div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+// click su contribuisci
+$(document).ready(function(){
+    $("#contribuisci").click(function (event) {
+
+    //stop submit the form, we will post it manually.
+    event.preventDefault();
+
+    // Get form
+    var form = $('#formRegister')[0];
+
+    // Create an FormData object
+    
+    var data = new FormData(form);
+    console.log(data);
+    // If you want to add an extra field for the FormData
+    //data.append("CustomField", "This is some extra data, testing");
+    data.append("organizzazione", $("#organizzazione").val());
+    data.append("responsabile", $("#responsabile").val());    
+    data.append("note", $("#note").val());
+    data.append("nido", $("#checkNido").prop('checked'));
+    data.append("infanzia", $("#checkInfanzia").prop('checked'));
+    data.append("primaria", $("#checkPrimaria").prop('checked'));
+    data.append("secondaria", $("#checkSecondaria").prop('checked'));
+    data.append("esperto", $("#checkEsperto").prop('checked'));
+    data.append("genitore", $("#checkGenitore").prop('checked'));
+    data.append("studente",$("#checkStudente").prop('checked'));
+
+
+        
+
+    // disabled the submit button
+    $("#contribuisci").prop("disabled", true);
+
+    $.ajax({
+        type: "POST",
+        enctype: 'multipart/form-data',
+        url: "http://localhost:1880/api/formRegister",
+        data: data,
+        processData: false,
+        contentType: false,
+        cache: false,
+        timeout: 600000,
+        success: function (data) {
+
+            //$("#result").text(data);
+            console.log("SUCCESS : ", data);
+            $("#contribuisci").prop("disabled", false);
+
+        },
+        error: function (e) {
+
+            //$("#result").text(e.responseText);
+            console.log("ERROR : ", e);
+            $("#contribuisci").prop("disabled", false);
+
+        }
+    });
+
+    });
+    /*
+    $( "#contribuisci" ).click(function() {
+        var data={};
+        data.organizzazione=$("#organizzazione").val();
+        data.responsabile=$("#responsabile").val();
+        data.note=$("#note").val();
+        data.nido=$("#checkNido").prop('checked');
+        data.infanzia=$("#checkInfanzia").prop('checked');
+        data.primaria=$("#checkPrimaria").prop('checked');
+        data.secondaria=$("#checkSecondaria").prop('checked');
+        data.esperto=$("#checkEsperto").prop('checked');
+        data.genitore=$("#checkGenitore").prop('checked');
+        data.studente=$("#checkStudente").prop('checked');
+        $.post( "http://localhost:1880/api/form", data );
+    });
+    */
+    
+});
+</script>
+
+</div>
     <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-white clean-navbar">
-        <div class="container"><img src="/assets/img/logo.PNG?h=82d8c2b0935b8549b6f3a030e7893bc5" width="320"><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+        <div class="container"><img src="assets/img/ecosistema/logo.PNG?h=82d8c2b0935b8549b6f3a030e7893bc5" width="320"><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse"
                 id="navcol-1">
                 <ul class="nav navbar-nav ml-auto">
-                    <li class="nav-item" role="presentation"><a class="nav-link" href="/index.html">Home</a></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link active" href="/aderisci.html">ADERISCI</a></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link" href="/statuto.html">STATUTO</a></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link" href="/organigramma.html">ORGANIGRAMMA</a></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link" href="/contact-us.html">SIAMO QUI</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#">PARTECIPA</a>
+                        <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="aderisci.html">Organizzazione/Ente</a><a class="dropdown-item" role="presentation" href="aderisci_cittadino.html">CIttadino/a</a></div>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -36,13 +118,42 @@
                     <h2 class="text-info">CONTIBUISCI E COSTITUISCI</h2>
                     <p>#scuolacostituente</p>
                 </div>
-                <form>
-                    <div class="form-group"><label>Organizzazione / Ente / Cittadino/a</label><input class="form-control" type="text"></div>
-                    <div class="form-group"><label>Responsabile</label><input class="form-control" type="text"></div>
-                    <div class="form-group"><label>PEC Email</label><input class="form-control" type="email"></div>
-                    <div class="form-group"><label>Note</label><textarea class="form-control"></textarea></div>
-                    <div class="form-group"><label>Il tuo logo per la multitidine inarrestabile</label><input type="file"></div>
-                    <div class="form-group"><button class="btn btn-primary btn-block" type="submit">ADERISCI</button></div>
+                <form id="formRegister" method="post" action="" enctype="multipart/form-data">
+                    <div class="form-group"><label>Organizzazione / Ente&nbsp;</label><input class="form-control" type="text" id="organizzazione"></div>
+                    <div class="form-group"><label>Responsabile</label><input class="form-control" type="text" id="responsabile"></div>
+                    <div class="form-group"><label>Email</label><input class="form-control" type="email" id="email"></div>
+                    <div class="form-group"><label>Note</label><textarea class="form-control" id="note"></textarea></div>
+                    <div class="form-group"><label>Interesse</label>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="form-check" id="nido"><input class="form-check-input" type="checkbox" id="checkNido"><label class="form-check-label" id="nido" for="formCheck-1">NIDO</label></div>
+                            </div>
+                            <div class="col">
+                                <div class="form-check"><input class="form-check-input" type="checkbox" id="checkInfanzia"><label class="form-check-label" id="infanzia" for="formCheck-2">INFANZIA</label></div>
+                            </div>
+                            <div class="col">
+                                <div class="form-check"><input class="form-check-input" type="checkbox" id="checkPrimaria"><label class="form-check-label" id="primaria" for="formCheck-3">PRIMARIA</label></div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="form-check"><input class="form-check-input" type="checkbox" id="checkSecondaria"><label class="form-check-label" id="secondaria" for="formCheck-1">SECONDARIA</label></div>
+                            </div>
+                            <div class="col">
+                                <div class="form-check"><input class="form-check-input" type="checkbox" id="checkEsperto"><label class="form-check-label" id="esperto" for="formCheck-2">ESPERTO</label></div>
+                            </div>
+                            <div class="col">
+                                <div class="form-check"><input class="form-check-input" type="checkbox" id="checkGenitore"><label class="form-check-label" id="genitore" for="formCheck-3">GENITORE</label></div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="form-check"><input class="form-check-input" type="checkbox" id="checkStudente"><label class="form-check-label" id="studente" for="formCheck-1">STUDENTE</label></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group"><label>Il tuo logo per la multitidine inarrestabile</label><input type="file" id="logo" name="logo"></div>
+                    <div class="form-group"><button class="btn btn-primary btn-block" id="contribuisci" type="submit">CONTRIBUISCI e COSTITUISCI</button></div>
                 </form>
             </div>
         </section>
@@ -55,8 +166,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
-    <script src="/assets/js/smoothproducts.min.js?h=975b2635c9a06eae9f47d6cae8158a12"></script>
-    <script src="/assets/js/theme.js?h=417b03f5f0a4f9f27f8c248f532eb5af"></script>
+    <script src="assets/js/smoothproducts.min.js?h=975b2635c9a06eae9f47d6cae8158a12"></script>
+    <script src="assets/js/theme.js?h=417b03f5f0a4f9f27f8c248f532eb5af"></script>
 </body>
 
 </html>

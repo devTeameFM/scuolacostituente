@@ -5,26 +5,26 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Contact Us - Brand</title>
-    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css?h=ee0ef312f3d017dd77f4c1ebe512ed7e">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css?h=d47a18287833af57c7d1f8031aaf85c2">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Aleo">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css">
-    <link rel="stylesheet" href="/assets/css/smoothproducts.css?h=38a515b6b30123300b3619cce6411cec">
+    <link rel="stylesheet" href="assets/css/smoothproducts.css?h=38a515b6b30123300b3619cce6411cec">
 </head>
 
 <body>
     <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-white clean-navbar">
-        <div class="container"><img src="/assets/img/logo.PNG?h=82d8c2b0935b8549b6f3a030e7893bc5" width="320"><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+        <div class="container"><img src="assets/img/ecosistema/logo.PNG?h=82d8c2b0935b8549b6f3a030e7893bc5" width="320"><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse"
                 id="navcol-1">
                 <ul class="nav navbar-nav ml-auto">
-                    <li class="nav-item" role="presentation"><a class="nav-link" href="/index.html">Home</a></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link" href="/aderisci.html">ADERISCI</a></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link" href="/statuto.html">STATUTO</a></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link active" href="/organigramma.html">ORGANIGRAMMA</a></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link" href="/contact-us.html">SIAMO QUI</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#">PARTECIPA</a>
+                        <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="aderisci.html">Organizzazione/Ente</a><a class="dropdown-item" role="presentation" href="aderisci_cittadino.html">CIttadino/a</a></div>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -34,83 +34,400 @@
             <div class="container">
                 <div class="block-heading">
                     <div class="row"></div>
-                    <div class="col"><div>
-    <script src="//d3js.org/d3.v3.min.js"></script>
+                    <div class="col">  
+<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<div>
+.
+    <!-- container for force layout visualisation  -->
+    <section id="vis"></section> 
 <script>
 
-var width = 960,
-    height = 500;
+// some colour variables
+  var tcBlack = "#130C0E";
 
-var nodes = d3.range(200).map(function() { return {radius: Math.random() * 12 + 4}; }),
-    root = nodes[0],
-    color = d3.scale.category10();
+// rest of vars
+var w = 960,
+    h = 800,
+    maxNodeSize = 50,
+    x_browser = 20,
+    y_browser = 25,
+    root;
+ 
+var vis;
+var force = d3.layout.force(); 
 
-root.radius = 0;
-root.fixed = true;
+vis = d3.select("#vis").append("svg").attr("width", w).attr("height", h);
 
-var force = d3.layout.force()
-    .gravity(0.05)
-    .charge(function(d, i) { return i ? 0 : -2000; })
-    .nodes(nodes)
-    .size([width, height]);
-
-force.start();
-
-var svg = d3.select("body").append("svg")
-    .attr("width", width)
-    .attr("height", height);
-
-svg.selectAll("circle")
-    .data(nodes.slice(1))
-  .enter().append("circle")
-    .attr("r", function(d) { return d.radius; })
-    .style("fill", function(d, i) { return color(i % 3); });
-
-force.on("tick", function(e) {
-  var q = d3.geom.quadtree(nodes),
-      i = 0,
-      n = nodes.length;
-
-  while (++i < n) q.visit(collide(nodes[i]));
-
-  svg.selectAll("circle")
-      .attr("cx", function(d) { return d.x; })
-      .attr("cy", function(d) { return d.y; });
-});
-
-svg.on("mousemove", function() {
-  var p1 = d3.mouse(this);
-  root.px = p1[0];
-  root.py = p1[1];
-  force.resume();
-});
-
-function collide(node) {
-  var r = node.radius + 16,
-      nx1 = node.x - r,
-      nx2 = node.x + r,
-      ny1 = node.y - r,
-      ny2 = node.y + r;
-  return function(quad, x1, y1, x2, y2) {
-    if (quad.point && (quad.point !== node)) {
-      var x = node.x - quad.point.x,
-          y = node.y - quad.point.y,
-          l = Math.sqrt(x * x + y * y),
-          r = node.radius + quad.point.radius;
-      if (l < r) {
-        l = (l - r) / l * .5;
-        node.x -= x *= l;
-        node.y -= y *= l;
-        quad.point.x += x;
-        quad.point.y += y;
-      }
+dataInput={
+ "name": "marvel",
+ "img": "http://marvel-force-chart.surge.sh/marvel_force_chart_img/marvel.png",
+ "children": [
+  {
+   "name": "Heroes",
+   "children": [
+    {
+      "hero": "Spider-Man",
+      "name": "Peter Benjamin Parker", 
+      "link": "http://marvel.com/characters/54/spider-man",
+      "img":  "http://marvel-force-chart.surge.sh/marvel_force_chart_img/top_spiderman.png",
+      "size": 40000
+    },
+    {
+      "hero": "CAPTAIN MARVEL",
+      "name": "Carol Danvers", 
+      "link": "http://marvel.com/characters/9/captain_marvel",
+      "img":  "http://marvel-force-chart.surge.sh/marvel_force_chart_img/top_captainmarvel.png",
+      "size": 40000
+    },
+    {
+      "hero": "HULK", 
+      "name": "Robert Bruce Banner",
+      "link": "http://marvel.com/characters/25/hulk",
+      "img":  "http://marvel-force-chart.surge.sh/marvel_force_chart_img/top_hulk.png",
+      "size": 40000
+    },
+    {
+      "hero": "Black Widow", 
+      "name": "Natalia 'Natasha' Alianovna Romanova",
+      "link": "http://marvel.com/characters/6/black_widow",
+      "img":  "http://marvel-force-chart.surge.sh/marvel_force_chart_img/top_blackwidow.png",
+      "size": 40000
+    },
+    {
+      "hero": "Daredevil", 
+      "name": "Matthew Michael Murdock",
+      "link": "http://marvel.com/characters/11/daredevil",
+      "img":  "http://marvel-force-chart.surge.sh/marvel_force_chart_img/top_daredevil.png",
+      "size": 40000
+    },
+    {
+      "hero": "Wolverine", 
+      "name": "James Howlett",
+      "link": "http://marvel.com/characters/66/wolverine",
+      "img":  "http://marvel-force-chart.surge.sh/marvel_force_chart_img/top_wolverine.png",
+      "size": 40000
+    },
+    {
+      "hero": "Captain America", 
+      "name": "Steven Rogers",
+      "link": "http://marvel.com/characters/8/captain_america",
+      "img":  "http://marvel-force-chart.surge.sh/marvel_force_chart_img/top_captainamerica.png",
+      "size": 40000
+    },
+    {
+      "hero": "Iron Man", 
+      "name": "Anthony Edward 'Tony' Stark",
+      "link": "http://marvel.com/characters/29/iron_man",
+      "img":  "http://marvel-force-chart.surge.sh/marvel_force_chart_img/top_ironman.png",
+      "size": 40000
+    },
+    {
+      "hero": "THOR", 
+      "name": "Thor Odinson",
+      "link": "http://marvel.com/characters/60/thor",
+      "img":  "http://marvel-force-chart.surge.sh/marvel_force_chart_img/top_thor.png",
+      "size": 40000
     }
-    return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
-  };
+  ]
+  },
+  {
+   "name": "Villains",
+   "children": [
+    {
+      "hero": "Dr. Doom",
+      "name": "Victor von Doom", 
+      "link": "http://marvel.com/characters/13/dr_doom",
+      "img":  "http://marvel-force-chart.surge.sh/marvel_force_chart_img/drdoom.png",
+      "size": 40000
+    },
+    {
+      "hero": "Mystique",
+      "name": "Unrevealed", 
+      "link": "http://marvel.com/characters/1552/mystique",
+      "img":  "http://marvel-force-chart.surge.sh/marvel_force_chart_img/mystique.png",
+      "size": 40000
+    },
+    {
+      "hero": "Red Skull",
+      "name": "Johann Shmidt", 
+      "link": "http://marvel.com/characters/1901/red_skull",
+      "img":  "http://marvel-force-chart.surge.sh/marvel_force_chart_img/redskull.png",
+      "size": 40000
+    },
+    {
+      "hero": "Ronan",
+      "name": "Ronan", 
+      "link": "http://marvel.com/characters/49/ronan",
+      "img":  "http://marvel-force-chart.surge.sh/marvel_force_chart_img/ronan.png",
+      "size": 40000
+    },
+    {
+      "hero": "Magneto",
+      "name": "Max Eisenhardt", 
+      "link": "http://marvel.com/characters/35/magneto",
+      "img":  "http://marvel-force-chart.surge.sh/marvel_force_chart_img/magneto.png",
+      "size": 40000
+    },
+    {
+      "hero": "Thanos",
+      "name": "Thanos", 
+      "link": "http://marvel.com/characters/58/thanos",
+      "img":  "http://marvel-force-chart.surge.sh/marvel_force_chart_img/thanos.png",
+      "size": 40000
+    },
+    {
+      "hero": "Black Cat",
+      "name": "Felicia Hardy", 
+      "link": "http://marvel.com/characters/271/black_cat",
+      "img":  "http://marvel-force-chart.surge.sh/marvel_force_chart_img/blackcat.png",
+      "size": 40000
+    }
+   ]
+  },
+  {
+   "name": "Teams",
+   "children": [
+    {
+      "hero": "Avengers",
+      "name": "", 
+      "link": "http://marvel.com/characters/68/avengers",
+      "img":  "http://marvel-force-chart.surge.sh/marvel_force_chart_img/avengers.png",
+      "size": 40000
+    },
+    {
+      "hero": "Guardians of the Galaxy",
+      "name": "", 
+      "link": "http://marvel.com/characters/70/guardians_of_the_galaxy",
+      "img":  "http://marvel-force-chart.surge.sh/marvel_force_chart_img/gofgalaxy.png",
+      "size": 40000
+    },
+    {
+      "hero": "Defenders",
+      "name": "", 
+      "link": "http://marvel.com/characters/534/defenders",
+      "img":  "http://marvel-force-chart.surge.sh/marvel_force_chart_img/defenders.png",
+      "size": 40000
+    },
+    {
+      "hero": "X-Men",
+      "name": "", 
+      "link": "http://marvel.com/characters/71/x-men",
+      "img":  "http://marvel-force-chart.surge.sh/marvel_force_chart_img/xmen.png",
+      "size": 40000
+    },
+    {
+      "hero": "Fantastic Four",
+      "name": "", 
+      "link": "http://marvel.com/characters/69/fantastic_four",
+      "img":  "http://marvel-force-chart.surge.sh/marvel_force_chart_img/fantasticfour.png",
+      "size": 40000
+    },
+    {
+      "hero": "Inhumans",
+      "name": "", 
+      "link": "http://marvel.com/characters/1040/inhumans",
+      "img":  "http://marvel-force-chart.surge.sh/marvel_force_chart_img/inhumans.png",
+      "size": 40000
+    }
+   ]
+  }  
+ ]
+}
+ 
+d3.json(dataInput, function(json) {
+ 
+  root = json;
+  //root.fixed = true;
+  root.x = w / 2;
+  root.y = h / 4;
+ 
+ 
+        // Build the path
+  var defs = vis.insert("svg:defs")
+      .data(["end"]);
+ 
+ 
+  defs.enter().append("svg:path")
+      .attr("d", "M0,-5L10,0L0,5");
+ 
+     update();
+});
+ 
+ 
+/**
+ *   
+ */
+function update() {
+  var nodes = flatten(root),
+      links = d3.layout.tree().links(nodes);
+ 
+  // Restart the force layout.
+  force.nodes(nodes)
+        .links(links)
+        .gravity(0.05)
+    .charge(-1500)
+    .linkDistance(100)
+    .friction(0.5)
+    .linkStrength(function(l, i) {return 1; })
+    .size([w, h])
+    .on("tick", tick)
+        .start();
+ 
+   var path = vis.selectAll("path.link")
+      .data(links, function(d) { return d.target.id; });
+ 
+    path.enter().insert("svg:path")
+      .attr("class", "link")
+      // .attr("marker-end", "url(#end)")
+      .style("stroke", "#eee");
+ 
+ 
+  // Exit any old paths.
+  path.exit().remove();
+ 
+ 
+ 
+  // Update the nodes…
+  var node = vis.selectAll("g.node")
+      .data(nodes, function(d) { return d.id; });
+ 
+ 
+  // Enter any new nodes.
+  var nodeEnter = node.enter().append("svg:g")
+      .attr("class", "node")
+      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+      .on("click", click)
+      .call(force.drag);
+ 
+  // Append a circle
+  nodeEnter.append("svg:circle")
+      .attr("r", function(d) { return Math.sqrt(d.size) / 10 || 4.5; })
+      .style("fill", "#eee");
+ 
+   
+  // Append images
+  var images = nodeEnter.append("svg:image")
+        .attr("xlink:href",  function(d) { return d.img;})
+        .attr("x", function(d) { return -25;})
+        .attr("y", function(d) { return -25;})
+        .attr("height", 50)
+        .attr("width", 50);
+  
+  // make the image grow a little on mouse over and add the text details on click
+  var setEvents = images
+          // Append hero text
+          .on( 'click', function (d) {
+              d3.select("h1").html(d.hero); 
+              d3.select("h2").html(d.name); 
+              d3.select("h3").html ("Take me to " + "<a href='" + d.link + "' >"  + d.hero + " web page ⇢"+ "</a>" ); 
+           })
+
+          .on( 'mouseenter', function() {
+            // select element in current context
+            d3.select( this )
+              .transition()
+              .attr("x", function(d) { return -60;})
+              .attr("y", function(d) { return -60;})
+              .attr("height", 100)
+              .attr("width", 100);
+          })
+          // set back
+          .on( 'mouseleave', function() {
+            d3.select( this )
+              .transition()
+              .attr("x", function(d) { return -25;})
+              .attr("y", function(d) { return -25;})
+              .attr("height", 50)
+              .attr("width", 50);
+          });
+
+  // Append hero name on roll over next to the node as well
+  nodeEnter.append("text")
+      .attr("class", "nodetext")
+      .attr("x", x_browser)
+      .attr("y", y_browser +15)
+      .attr("fill", tcBlack)
+      .text(function(d) { return d.hero; });
+ 
+ 
+  // Exit any old nodes.
+  node.exit().remove();
+ 
+ 
+  // Re-select for update.
+  path = vis.selectAll("path.link");
+  node = vis.selectAll("g.node");
+ 
+function tick() {
+ 
+ 
+    path.attr("d", function(d) {
+ 
+     var dx = d.target.x - d.source.x,
+           dy = d.target.y - d.source.y,
+           dr = Math.sqrt(dx * dx + dy * dy);
+           return   "M" + d.source.x + "," 
+            + d.source.y 
+            + "A" + dr + "," 
+            + dr + " 0 0,1 " 
+            + d.target.x + "," 
+            + d.target.y;
+  });
+    node.attr("transform", nodeTransform);    
+  }
 }
 
+ 
+/**
+ * Gives the coordinates of the border for keeping the nodes inside a frame
+ * http://bl.ocks.org/mbostock/1129492
+ */ 
+function nodeTransform(d) {
+  d.x =  Math.max(maxNodeSize, Math.min(w - (d.imgwidth/2 || 16), d.x));
+    d.y =  Math.max(maxNodeSize, Math.min(h - (d.imgheight/2 || 16), d.y));
+    return "translate(" + d.x + "," + d.y + ")";
+   }
+ 
+/**
+ * Toggle children on click.
+ */ 
+function click(d) {
+  if (d.children) {
+    d._children = d.children;
+    d.children = null;
+  } else {
+    d.children = d._children;
+    d._children = null;
+  }
+ 
+  update();
+}
+ 
+ 
+/**
+ * Returns a list of all nodes under the root.
+ */ 
+function flatten(root) {
+  var nodes = []; 
+  var i = 0;
+ 
+  function recurse(node) {
+    if (node.children) 
+      node.children.forEach(recurse);
+    if (!node.id) 
+      node.id = ++i;
+    nodes.push(node);
+  }
+ 
+  recurse(root);
+  return nodes;
+} 
+  
+  
 </script>
-</div></div>
+
+</div>
+</div>
                     <h2 class="text-info">ORGANIGRAMMA</h2>
                     <p>#scuolacostituente</p>
                 </div>
@@ -125,8 +442,8 @@ function collide(node) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
-    <script src="/assets/js/smoothproducts.min.js?h=975b2635c9a06eae9f47d6cae8158a12"></script>
-    <script src="/assets/js/theme.js?h=417b03f5f0a4f9f27f8c248f532eb5af"></script>
+    <script src="assets/js/smoothproducts.min.js?h=975b2635c9a06eae9f47d6cae8158a12"></script>
+    <script src="assets/js/theme.js?h=417b03f5f0a4f9f27f8c248f532eb5af"></script>
 </body>
 
 </html>
